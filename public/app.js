@@ -76,7 +76,6 @@ $(document).on("click", "#removearticle", function() {
 $(document).on("click", "#deletearticle", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
-
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
     method: "POST",
@@ -84,9 +83,15 @@ $(document).on("click", "#deletearticle", function() {
     data: {
       id: thisId
     }
-  });
+  })
+      // With that done
+      .then(function(data) {
+        // Log the response
+        console.log(data);
+        location.reload(true);
+      });
 });
-
+/*
 // Whenever someone clicks a p tag
 $(document).on("click", "#editnote=", function() {
   // Empty the notes from the note section
@@ -120,7 +125,7 @@ $(document).on("click", "#editnote=", function() {
       }
     });
 });
-
+*/
 // When you click the savenote button
 $(document).on("click", "#savenote", function() {
   // Grab the id associated with the article from the submit button

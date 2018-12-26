@@ -127,7 +127,8 @@ app.post("/saved-articles/:id", function(req,res) {
 })
 
 app.post("/delete-articles/:id", function(req,res) {
-  db.Article.findOneAndDelete({ _id: req.params.id });
+  db.Article.findOneAndDelete({ _id: req.params.id })
+  .then(dbModel => res.json(dbModel));
 })
 
 app.post("/unsaved-articles/:id", function(req,res) {
