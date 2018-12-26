@@ -77,7 +77,7 @@ $(document).on("click", "#scrape", function() {
   // Grab the id associated with the article from the submit button
   // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
-    method: "POST",
+    method: "GET",
     url: "/scrape",
   })
     // With that done
