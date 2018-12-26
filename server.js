@@ -1,3 +1,4 @@
+require("dotenv").config();
 var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
@@ -11,6 +12,7 @@ var cheerio = require("cheerio");
 var path = require("path");
 // Require all models
 var db = require("./models");
+var mongodb = require("./key");
 var PORT = 3000;
 // Initialize Express
 var app = express();
@@ -25,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/week18Populater");
+mongoose.connect(MONGODB_URI);
 
 // Routes
 
