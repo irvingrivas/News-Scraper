@@ -22,12 +22,7 @@ $.getJSON("/saved-articles", function(data) {
     data[i].title + "<br />" + data[i].link + "</p>")
     .append("<button data-id='" + data[i]._id + 
     "' data-title='" + data[i].title + "' data-link='" + data[i].link +
-    "' id='removearticle'>Remove</button><br>")
-    .append("<button data-id='" + data[i].note._id + 
-    "' data-title='" + data[i].note.title + "' data-body='" + data[i].note.body +
-    "' id='editnote'>Edit Note</button><br>")
-    .append("<p id='" + data[i].note._id + "'</p>" + data[i].note)
-    ;
+    "' id='removearticle'>Remove</button><br>");
   }
 });
 
