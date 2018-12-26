@@ -3,13 +3,97 @@ $.getJSON("/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+    $("#articles").append("<p data-id='" + data[i]._id + "'>" + 
+    data[i].title + "<br />" + data[i].link + "</p>")
+    .append("<button data-id='" + data[i]._id + 
+    "' data-title='" + data[i].title + "' data-link='" + data[i].link +
+    "' id='savearticle'>Save</button><br>")
+    .append("<button data-id='" + data[i]._id + 
+    "' data-title='" + data[i].title + "' data-link='" + data[i].link +
+    "' id='deletearticle'>Delete</button><br>");
   }
 });
 
+$.getJSON("/saved-articles", function(data) {
+  // For each one
+  for (var i = 0; i < data.length; i++) {
+    // Display the apropos information on the page
+    $("#saved-articles").append("<p data-id='" + data[i]._id + "'>" + 
+    data[i].title + "<br />" + data[i].link + "</p>")
+    .append("<button data-id='" + data[i]._id + 
+    "' data-title='" + data[i].title + "' data-link='" + data[i].link +
+    "' id='removearticle'>Remove</button><br>")
+    .append("<button data-id='" + data[i].note._id + 
+    "' data-title='" + data[i].note.title + "' data-body='" + data[i].note.body +
+    "' id='editnote'>Edit Note</button><br>")
+    .append("<p id='" + data[i].note._id + "'</p>" + data[i].note)
+    ;
+  }
+});
+
+// When you click the savearticle button
+$(document).on("click", "#savearticle", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/saved-articles/" + thisId,
+    data: {
+      title: $(this).attr("data-title"),
+      link: $(this).attr("data-link"),
+      saved: true
+    }
+  })
+    // With that done
+    .then(function(data) {
+      // Log the response
+      console.log(data);
+      location.reload(true);
+    });
+});
+
+// When you click the savearticle button
+$(document).on("click", "#removearticle", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/unsaved-articles/" + thisId,
+    data: {
+      title: $(this).attr("data-title"),
+      link: $(this).attr("data-link"),
+      saved: false
+    }
+  })
+    // With that done
+    .then(function(data) {
+      // Log the response
+      console.log(data);
+      location.reload(true);
+    });
+});
+
+// When you click the savearticle button
+$(document).on("click", "#deletearticle", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/delete-articles/" + thisId,
+    data: {
+      id: thisId
+    }
+  });
+});
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
+$(document).on("click", "#editnote=", function() {
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag

@@ -8,12 +8,10 @@ var mongoose = require("mongoose");
 // It works on the client and on the server
 var axios = require("axios");
 var cheerio = require("cheerio");
-
+var path = require("path");
 // Require all models
 var db = require("./models");
-
 var PORT = 3000;
-
 // Initialize Express
 var app = express();
 
@@ -31,10 +29,18 @@ mongoose.connect("mongodb://localhost/week18Populater");
 
 // Routes
 
+app.get("/", function(req,res) {
+  res.send("index.html");
+});
+
+app.get("/saved", function (req, res) {
+  res.sendFile(path.join(__dirname, "./public/saved.html"));
+});
+
 // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
-  axios.get("https://www.npr.org/").then(function(response) {
+  axios.get("http://www.echojs.com/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
     // Now, we grab every h2 within an article tag, and do the following:
@@ -61,16 +67,14 @@ app.get("/scrape", function(req, res) {
           return res.json(err);
         });
     });
-
     // If we were able to successfully scrape and save an Article, send a message to the client
-    res.send("Scrape Complete");
   });
 });
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
   // Grab every document in the Articles collection
-  db.Article.find({})
+  db.Article.find({saved: false})
     .then(function(dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
@@ -116,6 +120,25 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+app.post("/saved-articles/:id", function(req,res) {
+  db.Article.findOneAndUpdate({ _id: req.params.id },req.body)
+    .then(dbModel => res.json(dbModel))
+})
+
+app.post("/delete-articles/:id", function(req,res) {
+  db.Article.findOneAndDelete({ _id: req.params.id });
+})
+
+app.post("/unsaved-articles/:id", function(req,res) {
+  db.Article.findOneAndUpdate({ _id: req.params.id },req.body)
+    .then(dbModel => res.json(dbModel))
+})
+
+app.get("/saved-articles", function(req,res) {
+  db.Article.find({saved: true})
+    .then(dbModel => res.json(dbModel))
+})
 
 // Start the server
 app.listen(PORT, function() {
