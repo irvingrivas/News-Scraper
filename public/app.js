@@ -50,6 +50,45 @@ $(document).on("click", "#savearticle", function() {
 });
 
 // When you click the savearticle button
+$(document).on("click", "#savearticle", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/saved-articles/" + thisId,
+    data: {
+      title: $(this).attr("data-title"),
+      link: $(this).attr("data-link"),
+      saved: true
+    }
+  })
+    // With that done
+    .then(function(data) {
+      // Log the response
+      console.log(data);
+      location.reload(true);
+    });
+});
+
+// When you click the scrape button
+$(document).on("click", "#scrape", function() {
+  // Grab the id associated with the article from the submit button
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/scrape",
+  })
+    // With that done
+    .then(function(data) {
+      // Log the response
+      console.log(data);
+      location.reload(true);
+    });
+});
+
+// When you click the removearticle button
 $(document).on("click", "#removearticle", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
@@ -72,7 +111,30 @@ $(document).on("click", "#removearticle", function() {
     });
 });
 
-// When you click the savearticle button
+// When you click the removearticle button
+$(document).on("click", "#removearticle", function() {
+  // Grab the id associated with the article from the submit button
+  var thisId = $(this).attr("data-id");
+
+  // Run a POST request to change the note, using what's entered in the inputs
+  $.ajax({
+    method: "POST",
+    url: "/unsaved-articles/" + thisId,
+    data: {
+      title: $(this).attr("data-title"),
+      link: $(this).attr("data-link"),
+      saved: false
+    }
+  })
+    // With that done
+    .then(function(data) {
+      // Log the response
+      console.log(data);
+      location.reload(true);
+    });
+});
+
+// When you click the deletearticle button
 $(document).on("click", "#deletearticle", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
